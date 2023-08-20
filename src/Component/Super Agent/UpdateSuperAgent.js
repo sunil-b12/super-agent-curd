@@ -9,10 +9,10 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
 
     const [updateSuperAgent] = useUpdateSuperAgentMutation();
 
-
-
-    const [superAgentData1] = superAgentDataId?.Values || ''
-    console.log(superAgentData1)
+    const [superAgentData1] = superAgentDataId?.Values
+    console.log("superAgentDataId:", superAgentDataId);
+    console.log("superAgentDataId.Values:", superAgentDataId?.Values);
+    console.log("superAgentData1.Values:", superAgentData1);
 
     const [isUploaded, setIsUploaded] = useState(false);
     const [image, setImage] = useState('');
@@ -21,20 +21,20 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
 
     const formik = useFormik({
         initialValues: {
-            FullName: superAgentData1?.FullName || '',
-            UserName: superAgentData1?.UserName || '',
-            Address: superAgentData1?.Address || '',
-            District: superAgentData1?.District || '',
-            GradingRate: superAgentData1?.GradingRate || '',
-            Academic: superAgentData1?.Academic || '',
-            Professional: superAgentData1?.Professional || '',
-            WorkExp: superAgentData1?.WorkExp || '',
-            ResponseTime: superAgentData1?.ResponseTime || '',
-            ProdCategory: superAgentData1?.ProdCategory || '',
-            ProductType: superAgentData1?.ProductType || '',
-            Statement: superAgentData1?.Statement || '',
-            Contact: superAgentData1?.Contact || '',
-            Image: null,
+            FullName: superAgentData1?.FullName,
+            UserName: superAgentData1?.UserName,
+            Address: superAgentData1?.Address,
+            District: superAgentData1?.District,
+            GradingRate: superAgentData1?.GradingRate,
+            Academic: superAgentData1?.Academic,
+            Professional: superAgentData1?.Professional,
+            WorkExp: superAgentData1?.WorkExp,
+            ResponseTime: superAgentData1?.ResponseTime,
+            ProdCategory: superAgentData1?.ProdCategory,
+            ProductType: superAgentData1?.ProductType,
+            Statement: superAgentData1?.Statement,
+            Contact: superAgentData1?.Contact
+            // Image: null,
 
         },
         onSubmit: async (superData) => {
@@ -85,7 +85,7 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
         // validationSchema: valSchema
     });
 
-    console.log(formik.initialValues);
+
 
 
     return (
@@ -167,15 +167,15 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                         <label htmlFor="AgentCode" className="form-label">StarGrading</label>
                         <input
                             type='text'
-                            name='StarGrading'
-                            value={formik.values.StarGrading}
+                            name='GradingRate'
+                            value={formik.values.GradingRate}
                             onChange={formik.handleChange}
                             size="lg"
                             className='form-control'
                             label="Star Grading"
                         />
-                        {formik.errors.StarGrading && formik.touched.StarGrading && (
-                            <div className='mt-1 text-red-600'>{formik.errors.StarGrading}</div>
+                        {formik.errors.GradingRate && formik.touched.GradingRate && (
+                            <div className='mt-1 text-red-600'>{formik.errors.GradingRate}</div>
                         )}
                     </div>
 
@@ -248,15 +248,15 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                         <label htmlFor="AgentCode" className="form-label">Product Category</label>
                         <input
                             type='text'
-                            name='ProductCat'
-                            value={formik.values.ProductCat}
+                            name='ProdCategory'
+                            value={formik.values.ProdCategory}
                             onChange={formik.handleChange}
                             size="lg"
                             className='form-control'
                             label="Product Category"
                         />
-                        {formik.errors.ProductCat && formik.touched.ProductCat && (
-                            <div className='mt-1 text-red-600'>{formik.errors.ProductCat}</div>
+                        {formik.errors.ProdCategory && formik.touched.ProdCategory && (
+                            <div className='mt-1 text-red-600'>{formik.errors.ProdCategory}</div>
                         )}
                     </div>
 
@@ -264,15 +264,15 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                         <label htmlFor="AgentCode" className="form-label">Product Type</label>
                         <input
                             type='text'
-                            name='ProductType'
-                            value={formik.values.ProductType}
+                            name='ProdType'
+                            value={formik.values.ProdType}
                             onChange={formik.handleChange}
                             size="lg"
                             className='form-control'
                             label="Product Type"
                         />
-                        {formik.errors.ProductType && formik.touched.ProductType && (
-                            <div className='mt-1 text-red-600'>{formik.errors.ProductType}</div>
+                        {formik.errors.ProdType && formik.touched.ProdType && (
+                            <div className='mt-1 text-red-600'>{formik.errors.ProdType}</div>
                         )}
                     </div>
 

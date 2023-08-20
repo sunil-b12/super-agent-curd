@@ -31,23 +31,25 @@ export const superAgentApi = createApi({
         }),
 
         getSuperAgentById: builder.query({
-            query: (agentId) => ({
-                url: 'admin/agent',
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Signature": "p0m76",
-                },
-                body: JSON.stringify({
-                    AuthCode: "r1d3r",
-                    Flag: "SI",
-                    AgentID: agentId.toString()// Convert agentId to string
-                })
-            }),
+            query: (agentId) => {
+                if (agentId !== null) {
+                    return {
+                        url: 'admin/agent',
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Signature": "p0m76",
+                        },
+                        body: {
+                            AuthCode: "r1d3r",
+                            Flag: "SI",
+                            AgentID: agentId.toString() // Convert agentId to string
+                        }
+                    };
+                }
+            },
             invalidatesTags: ["allSuperAgent"],
         }),
-
-
         deleteSuperAgent: builder.mutation({
             query: (agentId) => ({
                 url: 'admin/agent',
@@ -99,7 +101,7 @@ export const superAgentApi = createApi({
         isActive: builder.mutation({
             query: (query) => ({
                 url: 'admin/agent',
-                body: JSON.stringify(query.body),
+                body: query.body,
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

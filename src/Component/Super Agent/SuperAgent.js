@@ -11,19 +11,20 @@ import UpdateSuperAgent from './UpdateSuperAgent';
 
 const SuperAgent = () => {
 
+    const [show, setShow] = useState(false);
+
+    const [updateshow, setUpdateShow] = useState(false);
+    const [agentId, setAgentId] = useState(null);
+
     const { data: superAgentData, refetch, isLoading } = useGetSuperAgentQuery();
 
-    const { data: superAgentDataId } = useGetSuperAgentByIdQuery(agentId)
+    const { data: superAgentDataId, isLoading: superAgentDataIdLoading, } = useGetSuperAgentByIdQuery(agentId)
 
     const [isActiveMutation] = useIsActiveMutation()
     const [isAllowMutation] = useIsAllowMutation()
 
     const [deleteSuperAgentMutation] = useDeleteSuperAgentMutation();
 
-    const [show, setShow] = useState(false);
-
-    const [updateshow, setUpdateShow] = useState(false);
-    const [agentId, setAgentId] = useState(null);
 
     const handleEditAgent = (agentId) => {
         setUpdateShow(true)
@@ -47,7 +48,15 @@ const SuperAgent = () => {
     const handleStatus = async (AgentID, IsActive) => {
         const isUpdated = IsActive === "A" ? "I" : "A"
         try {
-            toast.success('Success');
+            const response = await isActiveMutation({
+                body: {
+                    "AuthCode": "r1d3r",
+                    "Flag": "AI",
+                    "AgentID": AgentID.toString(),
+                    "IsActive": isUpdated
+                }
+            });
+            // toast.success('Success');
             refetch();
         } catch (error) {
             toast.error(error.message);
@@ -76,7 +85,16 @@ const SuperAgent = () => {
     const handleAllow = async (AgentID, AllowApp) => {
         const isUpdated = AllowApp === "Y" ? "N" : "Y"
         try {
-            toast.success('Success');
+            const response = await isActiveMutation({
+                body: {
+                    "AuthCode": "r1d3r",
+                    "Flag": "AD",
+                    "AgentID": AgentID.toString(),
+                    "AllowApp": isUpdated
+                }
+            });
+
+            // toast.success('Success');
             refetch();
         } catch (error) {
             toast.error(error.message);
@@ -100,7 +118,9 @@ const SuperAgent = () => {
     };
 
 
-
+    if (superAgentDataIdLoading) {
+        return <p>Loading...</p>; // Display a loading indicator while data is being fetched
+    }
 
     return (
         <>

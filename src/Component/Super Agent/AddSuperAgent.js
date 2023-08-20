@@ -38,7 +38,6 @@ const AddSuperAgent = ({ onHide }) => {
             FullName: "",
             UserName: "",
             Password: "",
-            Image: null,
             Address: "",
             District: "",
             StarGrading: "",
@@ -53,57 +52,35 @@ const AddSuperAgent = ({ onHide }) => {
             AllowApp: 'Y',
 
         },
-        onSubmit: async (superData) => {
-
-            console.log(superData.Image)
-
-            // const superData = new superData();
-            // superData.append('AuthCode', superData.AuthCode);
-            // superData.append('Flag', superData.Flag);
-            // superData.append('AgentCode', superData.AgentCode);
-            // superData.append('FullName', superData.FullName);
-            // superData.append('UserName', superData.UserName);
-            // superData.append('Password', superData.Password);
-            // superData.append('Address', superData.Address);
-            // superData.append('District', superData.District);
-            // superData.append('StarGrading', superData.StarGrading);
-            // superData.append('Professional', superData.Professional);
-            // superData.append('ResponseTime', superData.ResponseTime);
-            // superData.append('ProductCat', superData.ProductCat);
-            // superData.append('ProductType', superData.ProductType);
-            // superData.append('Statement', superData.Statement);
-            // superData.append('Contact', superData.Contact);
-            // superData.append('AllowApp', superData.AllowApp);
-
-            // for (var [key, value] of superData.entries()) {
-            //     superData[key] = value;
-            // }
-            // console.log(superData)
-
+        onSubmit: async (formdata) => {
+            console.log(formdata)
 
             try {
                 const responseData = await createSuperAgent({
-                    AuthCode: superData.AuthCode,
-                    Flag: superData.Flag,
-                    AgentCode: superData.AgentCode,
-                    FullName: superData.FullName,
-                    UserName: superData.UserName,
-                    Password: superData.Password,
-                    Address: superData.Address,
-                    StarGrading: superData.StarGrading,
-                    Professional: superData.Professional,
-                    ResponseTime: superData.ResponseTime,
-                    ProductCat: superData.ProductCat,
-                    ProductType: superData.ProductType,
-                    Statement: superData.Statement,
-                    ProductType: superData.ProductType,
-                    Contact: superData.Contact,
-                    AllowApp: superData.AllowApp,
+                    AuthCode: formdata.AuthCode,
+                    Flag: formdata.Flag,
+                    AgentCode: formdata.AgentCode,
+                    FullName: formdata.FullName,
+                    UserName: formdata.UserName,
+                    Password: formdata.Password,
+                    Address: formdata.Address,
+                    StarGrading: formdata.StarGrading.toString(),
+                    Professional: formdata.Professional,
+                    ResponseTime: formdata.ResponseTime,
+                    ProductCat: formdata.ProductCat,
+                    ProductType: formdata.ProductType,
+                    Statement: formdata.Statement,
+                    ProductType: formdata.ProductType,
+                    Contact: formdata.Contact,
+                    AllowApp: formdata.AllowApp,
                 }).unwrap();
+                toast.success('Super Agent Added successfully');
                 console.log('API Response:', responseData);
                 onHide();
             } catch (error) {
                 console.error(error);
+                toast.success('error');
+
             }
         },
         // validationSchema: valSchema
@@ -350,7 +327,7 @@ const AddSuperAgent = ({ onHide }) => {
                                 onChange={(e) => {
 
                                     const file = e.target.files[0];
-                                    formik.setFieldValue('imageVal', file);
+                                    formik.setFieldValue('Image', file);
                                     const reader = new FileReader();
                                     reader.readAsDataURL(file);
                                     reader.addEventListener('load', (e) => {

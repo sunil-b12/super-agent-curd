@@ -154,7 +154,29 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                             <div className='mt-1 text-red-600'>{formik.errors.StarGrading}</div>
                         )}
                     </div>
-
+                    <div className="mb-3">
+                        <label htmlFor="AgentCode" className="form-label">StarGrading</label>
+                        <select
+                            id="District"
+                            name="District"
+                            value={formik.values.District}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className='form-select'
+                        >
+                            <option value="" disabled>Select a District</option>
+                            <option value="1">District 1</option>
+                            <option value="2">District 2</option>
+                            <option value="3">District 3</option>
+                            <option value="4">District 4</option>
+                            <option value="5">District 5</option>
+                        </select>
+                        {formik.errors.District && formik.touched.District && (
+                            <div className="invalid-feedback">
+                                {formik.errors.District}
+                            </div>
+                        )}
+                    </div>
                     <div className="mb-3">
                         <label htmlFor="AgentCode" className="form-label">Academic</label>
                         <input

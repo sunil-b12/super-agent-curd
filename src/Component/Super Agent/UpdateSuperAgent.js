@@ -10,37 +10,47 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
     const [updateSuperAgent] = useUpdateSuperAgentMutation();
 
     const [superAgentData1] = superAgentDataId?.Values
-    console.log("superAgentDataId:", superAgentDataId);
-    console.log("superAgentDataId.Values:", superAgentDataId?.Values);
     console.log("superAgentData1.Values:", superAgentData1);
 
-    const [isUploaded, setIsUploaded] = useState(false);
-    const [image, setImage] = useState('');
+    const [selectedImage, setSelectedImage] = useState(superAgentData1.Image);
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const parts = reader.result.split(',');
+            if (parts.length === 2) {
+                formik.setFieldValue('Image', parts[1]); // Set only the base64 data
+                setSelectedImage(reader.result); // Store the selected image data
+            }
+        };
+    };
 
 
     const formik = useFormik({
         initialValues: {
+            AgentID: superAgentData1?.AgentID,
             FullName: superAgentData1?.FullName,
-            UserName: superAgentData1?.UserName,
             Address: superAgentData1?.Address,
             District: superAgentData1?.District,
-            GradingRate: superAgentData1?.GradingRate,
+            StarGrading: superAgentData1?.GradingRate,
             Academic: superAgentData1?.Academic,
             Professional: superAgentData1?.Professional,
             WorkExp: superAgentData1?.WorkExp,
             ResponseTime: superAgentData1?.ResponseTime,
-            ProdCategory: superAgentData1?.ProdCategory,
-            ProductType: superAgentData1?.ProductType,
+            ProductCat: superAgentData1?.ProdCategory,
+            ProductType: superAgentData1?.ProdType,
             Statement: superAgentData1?.Statement,
-            Contact: superAgentData1?.Contact
+            Contact: superAgentData1?.Contact,
+            Image: superAgentData1?.Image
             // Image: null,
 
         },
         onSubmit: async (superData) => {
             console.log('val:', superData);
             let formData = new FormData();
-            formData.append('FullName', superData.FullName);
+            formData.append('AgentID', superData.AgentID);
             formData.append('UserName', superData.UserName);
             formData.append('Password', superData.Password);
             formData.append('Address', superData.Address);
@@ -49,11 +59,12 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
             formData.append('Professional', superData.Professional);
             formData.append('ResponseTime', superData.ResponseTime);
             formData.append('ProductCat', superData.ProductCat);
+            formData.append('WorkExp', superData.WorkExp);
             formData.append('ProductType', superData.ProductType);
             formData.append('Statement', superData.Statement);
             formData.append('Contact', superData.Contact);
             formData.append('AllowApp', superData.AllowApp);
-            formData.append('image', superData.Image);
+            formData.append('Image', superData.Image);
 
             try {
                 const response = await updateSuperAgent({
@@ -61,16 +72,20 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                     {
                         AuthCode: "r1d3r",
                         Flag: "U",
+                        AgentID: superData.AgentID.toString(),
                         FullName: superData.FullName,
-                        UserName: superData.UserName,
+                        Password: superData.Password,
                         Address: superData.Address,
-                        Professional: superData.Professional,
                         District: superData.District,
+                        StarGrading: superData.StarGrading,
+                        Professional: superData.Professional,
                         ResponseTime: superData.ResponseTime,
                         ProductCat: superData.ProductCat,
+                        WorkExp: superData.WorkExp,
                         ProductType: superData.ProductType,
                         Statement: superData.Statement,
-                        AllowApp: superData.AllowApp,
+                        Contact: superData.Contact,
+                        Image: superData.Image,
                     }
 
                 }).unwrap();
@@ -92,22 +107,6 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
         <>
             <Form onSubmit={formik.handleSubmit}>
                 <div className='grid-column-03'>
-                    <div className="mb-3">
-                        <label htmlFor="AgentCode" className="form-label">UserName</label>
-                        <input
-                            type='text'
-                            name='UserName'
-                            onChange={formik.handleChange}
-                            value={formik.values.UserName}
-                            size="lg"
-                            className='form-control'
-                            label="UserName"
-                        />
-                        {formik.errors.UserName && formik.touched.UserName && (
-                            <div className='mt-1 text-red-600'>{formik.errors.UserName}</div>
-                        )}
-                    </div>
-
                     <div className="mb-3">
                         <label htmlFor="AgentCode" className="form-label">FullName</label>
                         <input
@@ -139,43 +138,20 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                             <div className='mt-1 text-red-600'>{formik.errors.Address}</div>
                         )}
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="AgentCode" className="form-label">District</label>
-                        <select
-                            id="District"
-                            name="District"
-                            value={formik.values.District}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            className='form-select'
-                        >
-                            <option value="" disabled>Select a District</option>
-                            <option value="district1">District 1</option>
-                            <option value="district2">District 2</option>
-                            <option value="district3">District 3</option>
-                            <option value="district4">District 4</option>
-                            <option value="district5">District 5</option>
-                        </select>
-                        {formik.errors.District && formik.touched.District && (
-                            <div className="invalid-feedback">
-                                {formik.errors.District}
-                            </div>
-                        )}
-                    </div>
 
                     <div className="mb-3">
                         <label htmlFor="AgentCode" className="form-label">StarGrading</label>
                         <input
                             type='text'
-                            name='GradingRate'
-                            value={formik.values.GradingRate}
+                            name='StarGrading'
+                            value={formik.values.StarGrading}
                             onChange={formik.handleChange}
                             size="lg"
                             className='form-control'
                             label="Star Grading"
                         />
-                        {formik.errors.GradingRate && formik.touched.GradingRate && (
-                            <div className='mt-1 text-red-600'>{formik.errors.GradingRate}</div>
+                        {formik.errors.StarGrading && formik.touched.StarGrading && (
+                            <div className='mt-1 text-red-600'>{formik.errors.StarGrading}</div>
                         )}
                     </div>
 
@@ -248,15 +224,15 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                         <label htmlFor="AgentCode" className="form-label">Product Category</label>
                         <input
                             type='text'
-                            name='ProdCategory'
-                            value={formik.values.ProdCategory}
+                            name='ProductCat'
+                            value={formik.values.ProductCat}
                             onChange={formik.handleChange}
                             size="lg"
                             className='form-control'
                             label="Product Category"
                         />
-                        {formik.errors.ProdCategory && formik.touched.ProdCategory && (
-                            <div className='mt-1 text-red-600'>{formik.errors.ProdCategory}</div>
+                        {formik.errors.ProductCat && formik.touched.ProductCat && (
+                            <div className='mt-1 text-red-600'>{formik.errors.ProductCat}</div>
                         )}
                     </div>
 
@@ -264,15 +240,15 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                         <label htmlFor="AgentCode" className="form-label">Product Type</label>
                         <input
                             type='text'
-                            name='ProdType'
-                            value={formik.values.ProdType}
+                            name='ProductType'
+                            value={formik.values.ProductType}
                             onChange={formik.handleChange}
                             size="lg"
                             className='form-control'
                             label="Product Type"
                         />
-                        {formik.errors.ProdType && formik.touched.ProdType && (
-                            <div className='mt-1 text-red-600'>{formik.errors.ProdType}</div>
+                        {formik.errors.ProductType && formik.touched.ProductType && (
+                            <div className='mt-1 text-red-600'>{formik.errors.ProductType}</div>
                         )}
                     </div>
 
@@ -309,41 +285,36 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                     </div>
 
                     {/* Image input */}
-                    <div className="input-field">
-                        {isUploaded ? (
-                            <div className="inputfield">
-                                <img src={image} alt="" style={{ height: "200px" }} />
-                                <span
-                                    className="close"
+                    {/* Render your form fields, including image input */}
+                    <div className="mb-3">
+                        <label htmlFor="Image">Image</label>
+                        <input
+                            type="file"
+                            id="Image"
+                            name="Image"
+                            className="bg-white"
+                            onChange={(e) => handleImageChange(e, formik)}
+                        />
+                        {selectedImage && (
+                            <div>
+                                <img src={selectedImage} height={100} width={100} alt="Selected" />
+                                <button
+                                    type="button"
                                     onClick={() => {
-                                        setImage("");
-                                        setIsUploaded(false);
-                                        formik.setFieldValue('Image', ''); // Clear the image field value
+                                        formik.setFieldValue('Image', ''); // Clear the selected image
+                                        setSelectedImage(null); // Clear the stored image data
                                     }}
                                 >
-                                    <AiFillCloseSquare />
-                                </span>
-                            </div>
-                        ) : (
-                            <div className="inputfield">
-                                <input
-                                    type="file"
-                                    onChange={(event) => {
-                                        const selectedImage = event.target.files[0];
-                                        if (selectedImage) {
-                                            setImage(URL.createObjectURL(selectedImage));
-                                            setIsUploaded(true);
-                                            formik.setFieldValue('Image', selectedImage); // Set the image field value
-                                        }
-                                    }}
-                                    id="Image"
-                                />
-                                <label className="image_box" htmlFor="image">
-                                    <AiOutlinePlus size="2rem" color="var(--primary)" />
-                                </label>
+                                    Remove
+                                </button>
                             </div>
                         )}
+                        {formik.errors.Image && formik.touched.Image && (
+                            <div className="mt-1 text-red-600">{formik.errors.Image}</div>
+                        )}
                     </div>
+
+
                 </div>
 
                 <button variant="primary" type="submit" className='mt-5'>

@@ -12,23 +12,35 @@ const AddSuperAgent = ({ onHide }) => {
 
 
 
-    // const valSchema = Yup.object().shape({
-    //     AgentCode: Yup.string().required(),
-    //     FullName: Yup.string().required(),
-    //     UserName: Yup.string().required(),
-    //     Password: Yup.string().required(),
-    //     Address: Yup.string().required(),
-    //     StarGrading: Yup.number().required(),
-    //     Academic: Yup.string(),
-    //     Professional: Yup.string(),
-    //     WorkExp: Yup.string(),
-    //     ResponseTime: Yup.string(),
-    //     ProductCat: Yup.string(),
-    //     ProductType: Yup.string(),
-    //     Statement: Yup.string(),
-    //     Contact: Yup.string(),
-    //     Image: Yup.mixed(),
-    // });
+    const valSchema = Yup.object().shape({
+        AgentCode: Yup.string().required(),
+        FullName: Yup.string().required(),
+        UserName: Yup.string().required(),
+        Password: Yup.string().required(),
+        Address: Yup.string().required(),
+        //     StarGrading: Yup.number().required(),
+        //     Academic: Yup.string(),
+        //     Professional: Yup.string(),
+        //     WorkExp: Yup.string(),
+        //     ResponseTime: Yup.string(),
+        //     ProductCat: Yup.string(),
+        //     ProductType: Yup.string(),
+        //     Statement: Yup.string(),
+        //     Contact: Yup.string(),
+        Image: Yup.mixed(),
+    });
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const parts = reader.result.split(',');
+            if (parts.length === 2) {
+                formik.setFieldValue('Image', parts[1]); // Set only the base64 data
+            }
+        };
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -50,11 +62,10 @@ const AddSuperAgent = ({ onHide }) => {
             Statement: "",
             Contact: "",
             AllowApp: 'Y',
-
+            Image: "",
         },
         onSubmit: async (formdata) => {
             console.log(formdata)
-
             try {
                 const responseData = await createSuperAgent({
                     AuthCode: formdata.AuthCode,
@@ -64,15 +75,19 @@ const AddSuperAgent = ({ onHide }) => {
                     UserName: formdata.UserName,
                     Password: formdata.Password,
                     Address: formdata.Address,
+                    District: formdata.District.toString(),
+                    Academic: formdata.Academic,
                     StarGrading: formdata.StarGrading.toString(),
                     Professional: formdata.Professional,
                     ResponseTime: formdata.ResponseTime,
                     ProductCat: formdata.ProductCat,
+                    WorkExp: formdata.WorkExp,
                     ProductType: formdata.ProductType,
                     Statement: formdata.Statement,
                     ProductType: formdata.ProductType,
                     Contact: formdata.Contact,
                     AllowApp: formdata.AllowApp,
+                    Image: formdata.Image,
                 }).unwrap();
                 toast.success('Super Agent Added successfully');
                 console.log('API Response:', responseData);
@@ -83,7 +98,7 @@ const AddSuperAgent = ({ onHide }) => {
 
             }
         },
-        // validationSchema: valSchema
+        validationSchema: valSchema
     });
 
 
@@ -152,6 +167,28 @@ const AddSuperAgent = ({ onHide }) => {
                         />
                         {formik.errors.Address && formik.touched.Address && (
                             <div className='mt-1 text-red-600'>{formik.errors.Address}</div>
+                        )}
+                    </div>
+                    <div className="mb-3">
+                        <select
+                            id="District"
+                            name="District"
+                            value={formik.values.District}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className='form-select'
+                        >
+                            <option value="" disabled>Select a District</option>
+                            <option value="1">District 1</option>
+                            <option value="2">District 2</option>
+                            <option value="3">District 3</option>
+                            <option value="4">District 4</option>
+                            <option value="5">District 5</option>
+                        </select>
+                        {formik.errors.District && formik.touched.District && (
+                            <div className="invalid-feedback">
+                                {formik.errors.District}
+                            </div>
                         )}
                     </div>
 
@@ -316,38 +353,25 @@ const AddSuperAgent = ({ onHide }) => {
                     </div>
 
 
-                    <div className="file w-full sm:w-1/1 md:w-1/1 lg:w-1/1 xl:w-1/2 px-2">
-                        <div className="photo">
-                            <label htmlFor="Image">Image</label>
-                            <input
-                                type="file"
-                                id="Image"
-                                name="Image"
-                                className="bg-white"
-                                onChange={(e) => {
-
-                                    const file = e.target.files[0];
-                                    formik.setFieldValue('Image', file);
-                                    const reader = new FileReader();
-                                    reader.readAsDataURL(file);
-                                    reader.addEventListener('load', (e) => {
-                                        formik.setFieldValue('Image', e.target.result);
-                                    })
-                                }
-                                }
-                            />
-                            {
-                                formik.values.Image && (
-                                    <img src={formik.values.Image} height={100} width={100} alt="" />
-                                )
-                            }
-                            {
-                                formik.errors.Image && formik.touched.Image && (
-                                    <div className="mt-1 text-red-600">{formik.errors.Image}</div>
-                                )
-                            }
-                        </div>
+                    {/* Image input */}
+                    <div className="mb-3">
+                        <label htmlFor="Image">Image</label>
+                        <input
+                            type="file"
+                            id="Image"
+                            name="Image"
+                            className="bg-white"
+                            onChange={handleImageChange}
+                        />
+                        {formik.values.Image && (
+                            <img src={`data:image/png;base64,${formik.values.Image}`} height={100} width={100} alt="Selected" />
+                        )}
+                        {formik.errors.Image && formik.touched.Image && (
+                            <div className="mt-1 text-red-600">{formik.errors.Image}</div>
+                        )}
                     </div>
+
+
                 </div>
 
                 <button variant="primary" type="submit" className="mt-5">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Table from 'react-bootstrap/Table';
+import table from 'react-bootstrap/table';
 import button from 'react-bootstrap/button';
 import Modal from 'react-bootstrap/Modal';
 import { AiOutlineClose } from "react-icons/ai";
@@ -8,12 +8,13 @@ import AddSuperAgent from './AddSuperAgent';
 import { Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import UpdateSuperAgent from './UpdateSuperAgent';
+import ResetPassword from './ResetPassword';
 
 const SuperAgent = () => {
 
     const [show, setShow] = useState(false);
-
     const [updateshow, setUpdateShow] = useState(false);
+    const [resetShow, setResetShow] = useState(false);
     const [agentId, setAgentId] = useState(null);
 
     const { data: superAgentData, refetch, isLoading } = useGetSuperAgentQuery();
@@ -31,6 +32,12 @@ const SuperAgent = () => {
 
         setAgentId(agentId)
     };
+
+    const handleResetPassword = (agentId) => {
+        setResetShow(true)
+        setAgentId(agentId)
+    };
+
 
     const handleDeleteAgent = async (agentId) => {
         try {
@@ -124,7 +131,7 @@ const SuperAgent = () => {
 
     return (
         <>
-            <div style={{ padding: "20px" }} className='container grid'>
+            <div style={{ padding: "20px" }} className=''>
                 <h2 className='text-center mt-3'>Super Agent Data</h2>
                 <div className=" my-5 d-flex justify-content-end">
                     <button variant="primary" onClick={() => setShow(true)}>
@@ -132,76 +139,86 @@ const SuperAgent = () => {
                     </button>
                 </div>
 
-                {isLoading ? (
-                    <div className="text-center">
-                        <Spinner animation="border" variant="primary" />
-                    </div>
-                ) : (
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>FullName</th>
-                                <th>Username</th>
-                                <th>Address</th>
-                                <th>AgentCode</th>
-                                <th>AllowApp</th>
-                                <th>GradingRate</th>
-                                <th>NoOfProperty</th>
-                                <th>IsActive</th>
-                                <th>CreatedDate</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                superAgentData?.Values.map((agentData) => {
-                                    return <tr key={agentData.AgentID}>
-                                        <td>{agentData.AgentID}</td>
-                                        <td>{agentData.FullName}</td>
-                                        <td>{agentData.UserName}</td>
-                                        <td>{agentData.Address}</td>
-                                        <td>{agentData.AgentCode}</td>
-                                        <td>
-                                            <button
-                                                className="uk-badge cursor-pointer bg-success text-white"
-                                                style={{ fontSize: "11px" }}
-                                                onClick={() => handleAllow(agentData.AgentID, agentData.AllowApp)}
-                                            >
-                                                {checkAllow(agentData.AllowApp)}
-                                            </button>
-                                        </td>
-                                        <td>{agentData.GradingRate}</td>
-                                        <td>{agentData.NoOfProperty}</td>
-                                        <td>
-                                            <button
-                                                className="uk-badge cursor-pointer bg-success text-white"
-                                                style={{ fontSize: "11px" }}
-                                                onClick={() => handleStatus(agentData.AgentID, agentData.IsActive)}
-                                            >
-                                                {checkStatus(agentData.IsActive)}
-                                            </button>
-                                        </td>
-                                        <td>{agentData.CreatedDate}</td>
-                                        <td>
-                                            <button className="btn text-warning btn-act" onClick={() => handleEditAgent(agentData.AgentID)}>
-                                                <i className="material-icons">Edit</i>
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeleteAgent(agentData.AgentID)}
-                                                className="btn text-danger btn-act"
-                                                data-toggle="modal"
-                                            >
-                                                <i className="material-icons">delete</i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                <div className="super-agent-table">
+                    {isLoading ? (
+                        <div className="text-center">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                    ) : (
+                        <table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>FullName</th>
+                                    <th>Username</th>
+                                    <th>Address</th>
+                                    <th>AgentCode</th>
+                                    <th>AllowApp</th>
+                                    <th>GradingRate</th>
+                                    <th>NoOfProperty</th>
+                                    <th>IsActive</th>
+                                    <th>CreatedDate</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    superAgentData?.Values?.map((agentData) => {
+                                        return <tr key={agentData.AgentID}>
+                                            <td>{agentData.AgentID}</td>
+                                            <td>{agentData.FullName}</td>
+                                            <td>{agentData.UserName}</td>
+                                            <td>{agentData.Address}</td>
+                                            <td>{agentData.AgentCode}</td>
+                                            <td>
+                                                <button
+                                                    className="uk-badge cursor-pointer bg-success text-white"
+                                                    style={{ fontSize: "11px" }}
+                                                    onClick={() => handleAllow(agentData.AgentID, agentData.AllowApp)}
+                                                >
+                                                    {checkAllow(agentData.AllowApp)}
+                                                </button>
+                                            </td>
+                                            <td>{agentData.GradingRate}</td>
+                                            <td>{agentData.NoOfProperty}</td>
+                                            <td>
+                                                <button
+                                                    className="uk-badge cursor-pointer bg-success text-white"
+                                                    style={{ fontSize: "11px" }}
+                                                    onClick={() => handleStatus(agentData.AgentID, agentData.IsActive)}
+                                                >
+                                                    {checkStatus(agentData.IsActive)}
+                                                </button>
+                                            </td>
+                                            <td>{agentData.CreatedDate}</td>
+                                            <td className='d-flex'>
+                                                <button className="btn text-warning btn-act" onClick={() => handleEditAgent(agentData.AgentID)}>
+                                                    <i className="material-icons">Edit</i>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteAgent(agentData.AgentID)}
+                                                    className="btn text-danger btn-act"
+                                                    data-toggle="modal"
+                                                >
+                                                    <i className="material-icons">delete</i>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleResetPassword(agentData.AgentID)}
+                                                    className="btn text-danger btn-act"
+                                                    data-toggle="modal"
+                                                >
+                                                    <i className="material-icons">forget password</i>
+                                                </button>
+                                            </td>
+                                        </tr>
 
-                                })
-                            }
-                        </tbody>
-                    </Table>
-                )}
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+
             </div>
             <div>
                 <Modal
@@ -241,6 +258,28 @@ const SuperAgent = () => {
                     </Modal.Header>
                     <Modal.Body>
                         <UpdateSuperAgent onHide={() => setUpdateShow(false)} superAgentDataId={superAgentDataId} />
+                    </Modal.Body>
+                </Modal>
+            </div >
+
+            {/* Reset Password  */}
+            <div>
+                <Modal
+                    show={resetShow}
+                    onHide={() => setResetShow(false)}
+                    dialogClassName="custom-modal"
+                    aria-labelledby="example-custom-modal-styling-title"
+                >
+                    <Modal.Header>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                            Reset Password Super Agent
+                        </Modal.Title>
+                        <button onClick={() => setResetShow(false)} className="uk-button bg-close-btn">
+                            <AiOutlineClose uk-tooltip="Close" size="1.3rem" color="#fff" />
+                        </button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ResetPassword onHide={() => setResetShow(false)} agentId={agentId} />
                     </Modal.Body>
                 </Modal>
             </div >

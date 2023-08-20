@@ -124,9 +124,22 @@ export const superAgentApi = createApi({
             invalidatesTags: ["allSuperAgent"],
         }),
 
+        restPassword: builder.mutation({
+            query: (query) => ({
+                url: 'admin/agent',
+                body: JSON.stringify(query.body),
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Signature": "p0m76",
+                },
+            }),
+            invalidatesTags: ["allSuperAgent"],
+        }),
+
     })
 
 })
 
 
-export const { useGetSuperAgentQuery, useDeleteSuperAgentMutation, useCreateSuperAgentMutation, useIsActiveMutation, useIsAllowMutation, useUpdateSuperAgentMutation, useGetSuperAgentByIdQuery } = superAgentApi
+export const { useGetSuperAgentQuery, useDeleteSuperAgentMutation, useCreateSuperAgentMutation, useIsActiveMutation, useIsAllowMutation, useUpdateSuperAgentMutation, useGetSuperAgentByIdQuery, useRestPasswordMutation } = superAgentApi

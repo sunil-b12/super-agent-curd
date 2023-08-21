@@ -10,6 +10,7 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
     const [updateSuperAgent] = useUpdateSuperAgentMutation();
 
     const [superAgentData1] = superAgentDataId?.Values
+    console.log("superAgentData1.Values:", superAgentData1);
 
     const [selectedImage, setSelectedImage] = useState(superAgentData1.Image);
 
@@ -18,18 +19,21 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-            formik.setFieldValue('Image', reader.result); // Set the base64 data
-            setSelectedImage(reader.result); // Store the selected image data
+            const parts = reader.result.split(',');
+            if (parts.length === 2) {
+                formik.setFieldValue('Image', parts[1]); // Set only the base64 data
+                setSelectedImage(reader.result); // Store the selected image data
+            }
         };
     };
 
 
     const formik = useFormik({
         initialValues: {
-            AgentID: superAgentData1?.AgentID.toString(),
+            AgentID: superAgentData1?.AgentID,
             FullName: superAgentData1?.FullName,
             Address: superAgentData1?.Address,
-            District: superAgentData1?.District.toString(),
+            District: superAgentData1?.District,
             StarGrading: superAgentData1?.GradingRate,
             Academic: superAgentData1?.Academic,
             Professional: superAgentData1?.Professional,
@@ -40,10 +44,10 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
             Statement: superAgentData1?.Statement,
             Contact: superAgentData1?.Contact,
             Image: null,
-            // Image: null,
 
         },
         onSubmit: async (formData) => {
+            console.log('val:', formData);
             try {
                 const response = await updateSuperAgent({
                     body:

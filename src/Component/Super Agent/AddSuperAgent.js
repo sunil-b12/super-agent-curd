@@ -18,7 +18,12 @@ const AddSuperAgent = ({ onHide }) => {
         UserName: Yup.string().required(),
         Password: Yup.string().required(),
         Address: Yup.string().required(),
-        //     StarGrading: Yup.number().required(),
+        StarGrading: Yup.number()
+            .required()
+            .test('max-length', 'StarGrading must be a number with up to 5 characters', val => {
+                if (val === undefined) return false;
+                return val.toString().length <= 5;
+            }),
         //     Academic: Yup.string(),
         //     Professional: Yup.string(),
         //     WorkExp: Yup.string(),

@@ -2,12 +2,28 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import { AiFillCloseSquare, AiOutlinePlus } from "react-icons/ai";
+import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useUpdateSuperAgentMutation } from '../Redux/superAgentApi';
 
 const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
 
     const [updateSuperAgent] = useUpdateSuperAgentMutation();
+
+
+    // const valSchema = Yup.object().shape({
+    //     AgentCode: Yup.string().required(),
+    //     FullName: Yup.string().required(),
+    //     UserName: Yup.string().required(),
+    //     Password: Yup.string().required(),
+    //     Address: Yup.string().required(),
+    //     StarGrading: Yup.string()
+    //         .required()
+    //         .test('max-length', 'StarGrading must be a number with up to 5 characters', val => {
+    //             if (val === undefined) return false;
+    //             return val.toString().length <= 5;
+    //         }),
+    // })
 
     const [superAgentData1] = superAgentDataId?.Values
     console.log("superAgentData1.Values:", superAgentData1);
@@ -26,6 +42,7 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
             }
         };
     };
+
 
 
     const formik = useFormik({

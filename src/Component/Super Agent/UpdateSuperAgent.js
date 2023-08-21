@@ -10,7 +10,6 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
     const [updateSuperAgent] = useUpdateSuperAgentMutation();
 
     const [superAgentData1] = superAgentDataId?.Values
-    console.log("superAgentData1.Values:", superAgentData1);
 
     const [selectedImage, setSelectedImage] = useState(superAgentData1.Image);
 
@@ -19,21 +18,18 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-            const parts = reader.result.split(',');
-            if (parts.length === 2) {
-                formik.setFieldValue('Image', parts[1]); // Set only the base64 data
-                setSelectedImage(reader.result); // Store the selected image data
-            }
+            formik.setFieldValue('Image', reader.result); // Set the base64 data
+            setSelectedImage(reader.result); // Store the selected image data
         };
     };
 
 
     const formik = useFormik({
         initialValues: {
-            AgentID: superAgentData1?.AgentID,
+            AgentID: superAgentData1?.AgentID.toString(),
             FullName: superAgentData1?.FullName,
             Address: superAgentData1?.Address,
-            District: superAgentData1?.District,
+            District: superAgentData1?.District.toString(),
             StarGrading: superAgentData1?.GradingRate,
             Academic: superAgentData1?.Academic,
             Professional: superAgentData1?.Professional,
@@ -43,49 +39,31 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
             ProductType: superAgentData1?.ProdType,
             Statement: superAgentData1?.Statement,
             Contact: superAgentData1?.Contact,
-            Image: superAgentData1?.Image
+            Image: null,
             // Image: null,
 
         },
-        onSubmit: async (superData) => {
-            console.log('val:', superData);
-            let formData = new FormData();
-            formData.append('AgentID', superData.AgentID);
-            formData.append('UserName', superData.UserName);
-            formData.append('Password', superData.Password);
-            formData.append('Address', superData.Address);
-            formData.append('District', superData.District);
-            formData.append('StarGrading', superData.StarGrading);
-            formData.append('Professional', superData.Professional);
-            formData.append('ResponseTime', superData.ResponseTime);
-            formData.append('ProductCat', superData.ProductCat);
-            formData.append('WorkExp', superData.WorkExp);
-            formData.append('ProductType', superData.ProductType);
-            formData.append('Statement', superData.Statement);
-            formData.append('Contact', superData.Contact);
-            formData.append('AllowApp', superData.AllowApp);
-            formData.append('Image', superData.Image);
-
+        onSubmit: async (formData) => {
             try {
                 const response = await updateSuperAgent({
                     body:
                     {
                         AuthCode: "r1d3r",
                         Flag: "U",
-                        AgentID: superData.AgentID.toString(),
-                        FullName: superData.FullName,
-                        Password: superData.Password,
-                        Address: superData.Address,
-                        District: superData.District,
-                        StarGrading: superData.StarGrading,
-                        Professional: superData.Professional,
-                        ResponseTime: superData.ResponseTime,
-                        ProductCat: superData.ProductCat,
-                        WorkExp: superData.WorkExp,
-                        ProductType: superData.ProductType,
-                        Statement: superData.Statement,
-                        Contact: superData.Contact,
-                        Image: superData.Image,
+                        AgentID: formData.AgentID.toString(),
+                        FullName: formData.FullName,
+                        Password: formData.Password,
+                        Address: formData.Address,
+                        District: formData.District.toString(),
+                        StarGrading: formData.StarGrading.toString(),
+                        Professional: formData.Professional,
+                        ResponseTime: formData.ResponseTime,
+                        ProductCat: formData.ProductCat,
+                        WorkExp: formData.WorkExp,
+                        ProductType: formData.ProductType,
+                        Statement: formData.Statement,
+                        Contact: formData.Contact,
+                        Image: formData.Image,
                     }
 
                 }).unwrap();

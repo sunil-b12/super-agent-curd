@@ -65,7 +65,7 @@ const AddSuperAgent = ({ onHide }) => {
             Image: "",
         },
         onSubmit: async (formdata) => {
-            console.log(formdata)
+            // console.log(formdata)
             try {
                 const responseData = await createSuperAgent({
                     AuthCode: formdata.AuthCode,
@@ -101,6 +101,7 @@ const AddSuperAgent = ({ onHide }) => {
         validationSchema: valSchema
     });
 
+    // console.log('val:', formik.initialValues);
 
     return (
         <>

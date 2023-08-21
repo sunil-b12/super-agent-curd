@@ -125,9 +125,14 @@ export const superAgentApi = createApi({
         }),
 
         restPassword: builder.mutation({
-            query: (query) => ({
+            query: (agentId) => ({
                 url: 'admin/agent',
-                body: JSON.stringify(query.body),
+                body: JSON.stringify({
+                    AuthCode: "r1d3r",
+                    Flag: "RP",
+                    AgentID: agentId.toString(),
+                    Password: "1"
+                }),
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import { AiFillCloseSquare, AiOutlinePlus } from "react-icons/ai";
@@ -40,7 +40,9 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
         };
     };
 
-
+    useEffect(() => {
+        setSelectedImage(superAgentData1?.Image || null);
+    }, [superAgentData1]);
 
     const formik = useFormik({
         initialValues: {
@@ -74,6 +76,7 @@ const UpdateSuperAgent = ({ onHide, superAgentDataId }) => {
                         Address: formData.Address,
                         District: formData.District.toString(),
                         StarGrading: formData.StarGrading.toString(),
+                        Academic: formData.Academic,
                         Professional: formData.Professional,
                         ResponseTime: formData.ResponseTime,
                         ProductCat: formData.ProductCat,

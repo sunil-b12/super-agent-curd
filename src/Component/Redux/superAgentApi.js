@@ -48,7 +48,7 @@ export const superAgentApi = createApi({
                     };
                 }
             },
-            invalidatesTags: ["allSuperAgent"],
+            providesTags: ["allSuperAgent"],
         }),
         deleteSuperAgent: builder.mutation({
             query: (agentId) => ({
